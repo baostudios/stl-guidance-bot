@@ -55,7 +55,5 @@ module.exports = () => {
         return rgbToHex(numericalRgb[0], numericalRgb[1], numericalRgb[2]);
     };
 
-    const red = "#e60000"
-
     return embedGradient();
 };
