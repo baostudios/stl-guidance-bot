@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const log = require("../handlers/logger")
+const log = require("../assets/utils/logger")
 
 const { MongoClient, ServerApiVersion} = require("mongodb");
 const { MONGO } = process.env;

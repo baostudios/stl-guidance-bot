@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const gradient = require("../handlers/gradient");
+const gradient = require("../assets/utils/gradient");
 
 module.exports = {
     name: "ping",

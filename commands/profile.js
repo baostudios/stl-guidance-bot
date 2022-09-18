@@ -1,6 +1,7 @@
-const { EmbedBuilder, ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle, ApplicationCommandOptionType } = require("discord.js");
+const {ApplicationCommandOptionType } = require("discord.js");
 const createPaginator = require("../handlers/paginator")
-const gradient = require("../handlers/gradient");
+const gradient = require("../assets/utils/gradient");
+const {ErrorEmbed, GuidanceEmbed} = require("../assets/utils/embeds");
 
 // TODO: Autocomplete for course registration https://discordjs.guide/interactions/autocomplete.html#enabling-autocomplete
 
@@ -32,8 +33,7 @@ module.exports = {
             }
         );
         if ( !query ) {
-            const embed = new EmbedBuilder()
-                .setColor("Red")
+            const embed = new ErrorEmbed()
                 .setDescription(`
                     ${user === interaction.user ? "You're not registered" : _user.username + ' has not registered themselves' } yet! ` +
                     `Create an account using \`/register\``)
@@ -42,29 +42,29 @@ module.exports = {
         }
 
         const pages = [
-            new EmbedBuilder()
+            new GuidanceEmbed()
                 .setColor(gradient())
                 .setTitle(`${query.name}'s Guidance Profile`)
                 .setDescription(query.bio)
                 .setThumbnail(user.avatarURL()),
-            new EmbedBuilder()
+            new GuidanceEmbed()
                 .setColor(gradient())
                 .setTitle(`page one`)
                 .setDescription(`okay`)
                 .setThumbnail(user.avatarURL()),
-            new EmbedBuilder()
+            new GuidanceEmbed()
                 .setColor(gradient())
                 .setTitle(`page two`)
                 .setDescription(`lmao`)
                 .setThumbnail(user.avatarURL()),
-            new EmbedBuilder()
+            new GuidanceEmbed()
                 .setColor(gradient())
                 .setTitle(`page three`)
                 .setDescription(`insert creative joke`)
                 .setThumbnail(user.avatarURL()),
         ]
 
-        const [collector, _interaction] = await createPaginator(interaction, pages);
+        const [,_interaction] = await createPaginator(interaction, pages);
 
         // interaction.reply({ embeds: [embed] });
     },

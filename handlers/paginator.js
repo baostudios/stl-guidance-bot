@@ -92,6 +92,7 @@ module.exports = async (interaction, _pages, files = null, timeout = 180000, com
     let page = 0;
 
     collector.on("collect", async button => {
+        if (!button.isButton()) return;
         if (button.customId.split("$")[1] !== interaction.id) return;
 
         if (button.user.id !== interaction.user.id) {
@@ -140,24 +141,26 @@ module.exports = async (interaction, _pages, files = null, timeout = 180000, com
         collector.resetTimer();
     });
 
-    collector.once("end", (_, reason) => {
-        components = components.map(component => {
-            return component.setDisabled(true);
-        });
+    collector.on("end",
+        (_, reason) => {
+            components = components.map(component => {
+                return component.setDisabled(true);
+            });
 
-        if (reason === "collectorStopped") {
-            interaction.editReply({
-                embeds: [pages[page].setFooter({ text: "Menu has been ended by user." })],
-                components: [new ActionRowBuilder().addComponents(components)],
-            });
+            if (reason === "collectorStopped") {
+                interaction.editReply({
+                    embeds: [pages[page].setFooter({ text: "Menu has been ended by user." })],
+                    components: [new ActionRowBuilder().addComponents(components)],
+                });
+            }
+            else if (reason === "time") {
+                interaction.editReply({
+                    embeds: [pages[page].setFooter({ text: "Menu timed out." })],
+                    components: [new ActionRowBuilder().addComponents(components)],
+                });
+            }
         }
-        else if (reason === "time") {
-            interaction.editReply({
-                embeds: [pages[page].setFooter({ text: "Menu timed out." })],
-                components: [new ActionRowBuilder().addComponents(components)],
-            });
-        }
-    });
+    );
 
     return [collector, interaction];
 };

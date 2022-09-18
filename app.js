@@ -1,11 +1,11 @@
 const { Client } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
-const log = require("./handlers/logger")
+const log = require("./assets/utils/logger")
 
 require("dotenv").config();
 
-const client = new Client({ intents: [] });
+const client = new Client({ intents: 3276799 });
 
 client.on('ready', () => log.info('stl guidance is online'));
 client.on('debug', m => log.debug(m));

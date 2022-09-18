@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node deploy.js && node app.js | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
+    "build": "node app.js | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'",
+    "deploy": "node deploy.js && node app.js | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
   },
   "repository": {
     "type": "git",

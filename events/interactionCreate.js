@@ -1,5 +1,5 @@
-const { InteractionType, EmbedBuilder} = require("discord.js");
-const gradient = require("../handlers/gradient");
+const { InteractionType } = require("discord.js");
+const { ErrorEmbed, SuccessEmbed } = require("../assets/utils/embeds")
 
 module.exports = {
     name: "interactionCreate",
@@ -11,8 +11,10 @@ module.exports = {
             }
             catch (error) {
                 console.error(error);
-                interaction.reply({ content: "Don't panic, something went wrong on our end. " +
-                        "We'll try our best to sort this out quickly.", ephemeral: true });
+                const embed = new ErrorEmbed()
+                    .setDescription("Don't panic, something went wrong on our end. " +
+                        "We'll try our best to sort this out quickly.")
+                interaction.reply({ embeds: [ embed ], ephemeral: true });
             }
         }
         if (interaction.isModalSubmit()) {
@@ -32,8 +34,7 @@ module.exports = {
                         password: interaction.fields.getTextInputValue("passwordModalId"),
                     });
                 });
-                const embed = new EmbedBuilder()
-                    .setColor(gradient())
+                const embed = new SuccessEmbed()
                     .setDescription(`All done! Your details have been submitted.`)
                     .setFooter({text: `Make sure to write it down somewhere because we would prefer for information` +
                         ` like this to stay private.`})
@@ -41,8 +42,8 @@ module.exports = {
                 interaction.reply({ embeds: [embed], ephemeral: true });
             }
         }
-        if (interaction.isSelectMenu()) {
-            // TODO: ...
-        }
+        // if (interaction.isSelectMenu()) {
+        //
+        // }
     },
 };

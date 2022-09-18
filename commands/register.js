@@ -1,6 +1,5 @@
-const { EmbedBuilder, ModalBuilder, TextInputBuilder, SelectMenuBuilder, ActionRowBuilder, TextInputStyle, ComponentType, MessageActionRow, } = require("discord.js");
-const { Modal, TextInputComponent, SelectMenuComponent, showModal } = require('discord-modals'); // Import all
-const gradient = require("../handlers/gradient");
+const { ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle, } = require("discord.js");
+const { ErrorEmbed } = require("../assets/utils/embeds")
 
 module.exports = {
     name: "register",
@@ -16,12 +15,10 @@ module.exports = {
             isRegistered = await collection.findOne({ _id: interaction.user.id });
         });
         if ( isRegistered ) {
-            const embed = new EmbedBuilder()
-                .setColor("Red")
+            const embed = new ErrorEmbed()
                 .setDescription(`
                     You're already registered! Need to update your name? 
-                    Try accessing to your profile using \`/profile\`!)
-                `)
+                    Try accessing to your profile using \`/profile\`!)`)
 
             return interaction.reply({ embeds: [embed] });
         }
