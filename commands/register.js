@@ -1,9 +1,16 @@
-const { ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle, } = require("discord.js");
-const { ErrorEmbed } = require("../assets/utils/embeds")
+const {
+    ModalBuilder,
+    TextInputBuilder,
+    ActionRowBuilder,
+    TextInputStyle,
+    SlashCommandBuilder,
+} = require("discord.js");
+const { ErrorEmbed } = require("../assets/utils/embeds");
 
 module.exports = {
-    name: "register",
-    description: "Create your very own unique Guidance profile.",
+    data: new SlashCommandBuilder()
+        .setName("register")
+        .setDescription("Create your very own unique Guidance profile"),
     /**
      *
      * @param interaction
@@ -11,16 +18,16 @@ module.exports = {
      */
     async execute(interaction) {
         let isRegistered;
-        await interaction.client.db.updateDatabase("users", "userinfo", async collection => {
+        await interaction.client.db.execute("users", "userinfo", async collection => {
             isRegistered = await collection.findOne({ _id: interaction.user.id });
         });
-        if ( isRegistered ) {
+        if (isRegistered) {
             const embed = new ErrorEmbed()
                 .setDescription(`
                     You're already registered! Need to update your name? 
-                    Try accessing to your profile using \`/profile\`!)`)
+                    Try accessing to your profile using \`/profile\`!`);
 
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ embeds: [ embed ] });
         }
         const fields = {
             name: new TextInputBuilder()
@@ -45,7 +52,7 @@ module.exports = {
                 .setMaxLength(100)
                 .setMinLength(4)
                 .setPlaceholder("This is entirely confidential and will stored safely."),
-        }
+        };
 
         const modal = new ModalBuilder()
             .setCustomId('registerModal')
@@ -54,7 +61,7 @@ module.exports = {
                 new ActionRowBuilder().setComponents(fields.name),
                 new ActionRowBuilder().setComponents(fields.bio),
                 new ActionRowBuilder().setComponents(fields.password),
-            )
+            );
 
         await interaction.showModal(modal);
     },

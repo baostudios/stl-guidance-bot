@@ -1,24 +1,26 @@
-const { EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 const gradient = require("../assets/utils/gradient");
+const { GuidanceEmbed } = require("../assets/utils/embeds");
 
 module.exports = {
-    name: "ping",
-    description: "Check API, bot and Mongo latency.",
-    execute(interaction) {
+    data: new SlashCommandBuilder()
+        .setName("ping")
+        .setDescription("Pong! Check API, bot and Mongo latency"),
+    async execute(interaction) {
         interaction.deferReply().then(() => interaction.fetchReply().then(async i => {
             const botPing = i.createdTimestamp - interaction.createdTimestamp;
             const apiPing = interaction.client.ws.ping;
             let dbPing;
             // const emojiFunction = ping => ping <= 100 ? "green" : (ping <= 300 ? "yellow" : "red");
 
-            await interaction.client.db.updateDatabase("test", "test", async collection => {
+            await interaction.client.db.execute("ready", "ready", async collection => {
                 const start = Date.now();
                 await collection.findOne({ text: null });
                 const end = Date.now();
                 dbPing = end - start;
             });
 
-            const embed = new EmbedBuilder()
+            const embed = new GuidanceEmbed()
                 .setColor(gradient())
                 .setTitle("Pong!")
                 // .setDescription(`**Bot latency** - \`${botPing}ms\` :${emojiFunction(botPing)}_circle:
@@ -27,7 +29,7 @@ module.exports = {
                 .setDescription(`**Bot latency** - \`${botPing}ms\`
                                  **API latency** - \`${apiPing}ms\`
                                  **Database latency** - \`${dbPing}ms\``);
-            interaction.editReply({ embeds: [embed] });
+            interaction.editReply({ embeds: [ embed ] });
         }));
     },
 };

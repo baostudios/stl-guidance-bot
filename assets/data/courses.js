@@ -42,8 +42,8 @@ class Course {
             TIJ1O1a: 103,
             TIJ1O1b: 103,
             BTT1O1a: 207,
-            BTT1O1b: 207
-        }
+            BTT1O1b: 207,
+        };
         this.coursePeriods = {
             MTH1WYa: 4,
             MTH1WYb: 3,
@@ -85,8 +85,8 @@ class Course {
             TIJ1O1a: 2,
             TIJ1O1b: 3,
             BTT1O1a: 2,
-            BTT1O1b: 1
-        }
+            BTT1O1b: 1,
+        };
         this.subjectCodes = {
             MTH: 'ap',
             ENG: 'ap',
@@ -100,9 +100,9 @@ class Course {
             AMU: 'art_and_gym',
             FSF: 'french',
             TIJ: 'elective',
-            BTT:'elective'
+            BTT: 'elective',
 
-        }
+        };
         this.codeId = {
             MTH: 'Math',
             ENG: 'English',
@@ -116,8 +116,8 @@ class Course {
             AMU: 'Instrumental Music',
             FSF: 'French',
             TIJ: 'Technology',
-            BTT:'Business'
-        }
+            BTT: 'Business',
+        };
         this.codes = {
             MTH: [],
             ENG: [],
@@ -132,7 +132,7 @@ class Course {
             FSF: [],
             TIJ: [],
             BTT: [],
-        }
+        };
         this.courses = {
             ap: [
                 {
@@ -179,7 +179,7 @@ class Course {
                     label: 'CGC1DYb',
                     description: 'Room 1007 / Period 1',
                     value: 'CGC1DYb',
-                }
+                },
             ],
             religion: [
                 {
@@ -348,21 +348,33 @@ class Course {
                     description: 'Room 207 / Period 1',
                     value: 'BTT1O1b',
                 },
-            ]
-        }
+            ],
+        };
     }
 
 
-    getCodes() {
-        return this.codes
+    getCodes (course) {
+        let code;
+        switch (course.slice(0, 3)) {
+            case 'HRE':
+                code = course.slice(0, 6);
+                break;
+            case 'PPL':
+                code = course.slice(0, 3) + course[5];
+                break;
+            default:
+                code = course.slice(0, 3);
+        }
+
+        return this.codeId[code]
     }
 
     /**
      * returns all courses
      * @returns {[ Object ]}
      */
-    getCourses()  {
-        return this.courses
+    getCourses() {
+        return this.courses;
     }
 
     /**
@@ -371,7 +383,78 @@ class Course {
      * @param name
      */
     getCoursesByName(name) {
-        return this.getCourses()[name]
+        return this.getCourses()[name];
+    }
+
+    getCourseLabels(name) {
+        const choices = [];
+
+        this.getCoursesByName(name).forEach(
+            course => choices.push(course.label),
+        );
+        return choices;
+    }
+
+    /**
+     * get a period by course
+     * @param course
+     * @returns {*}
+     */
+    periods(course) {
+        return this.coursePeriods[course];
+    }
+
+    /**
+     * get a room by course
+     * @param course
+     * @returns {*}
+     */
+    rooms(course) {
+        return this.courseRooms[course];
+    }
+
+    courseSubjectOptionsFormatted() {
+        const courseOptions = [];
+        Object.keys(this.courses).forEach(
+            course => {
+                const courses = this.getCoursesByName(course);
+                courseOptions.push(
+                    {
+                        name: (course === 'ap' ? 'aP' : course).split('_').join(' ').replace(
+                                /(^\w)|(\s+\w)/g, l => {
+                                    return l === ' a' ? l : l.toUpperCase();
+                                }) +
+                            ` Courses (e.g. ${courses[0].label}, ${courses[courses.length - 1].label}, etc.)`,
+                        value: course,
+                    },
+                );
+            },
+        );
+        return courseOptions;
+
+    }
+
+    courseSubjectOptions() {
+        const courseOptions = [];
+        Object.keys(this.courses).forEach(
+            course => {
+                courseOptions.push(
+                    {
+                        name: this.formatSubjectTitle(course) +
+                            ` Courses`,
+                        value: course,
+                    },
+                );
+            },
+        );
+        return courseOptions;
+    }
+
+    formatSubjectTitle(subject) {
+        return (subject === 'ap' ? 'aP' : subject).split('_').join(' ').replace(
+            /(^\w)|(\s+\w)/g, l => {
+                return l === ' a' ? l : l.toUpperCase();
+            })
     }
 }
 

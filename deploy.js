@@ -1,27 +1,36 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedVariable
-
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 const chalk = require("chalk");
-const createCommands = require("./handlers/commands");
+const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
 
-const { TOKEN, ID, SERVER } = process.env;
 console.log(chalk.yellow("deploying slash"));
-const rest = new REST({ version: "10" }).setToken(TOKEN);
+const commands = [];
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-const commands = createCommands().toJSON().map(command => {
-    delete command.execute;
-    return command;
-});
+for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    commands.push(command.data.toJSON());
+}
+
+const { TOKEN, ID, SERVER } = process.env;
+const rest = new REST({ version: '10' }).setToken(TOKEN);
+
 
 if (SERVER) {
     rest.put(Routes.applicationGuildCommands(ID, SERVER), { body: commands })
-        .then(() => { console.log(chalk.green(`deployed slash to server ${process.env.SERVER}`)); })
+        .then(() => {
+            console.log(chalk.green(`deployed slash to server ${process.env.SERVER}`));
+        })
         .catch(console.error);
-}
-else {
+} else {
     rest.put(Routes.applicationCommands(ID), { body: commands })
-        .then(() => { console.log(chalk.green("deployed slash commands globally")); })
+        .then(() => {
+            console.log(chalk.green("deployed slash commands globally"));
+        })
         .catch(console.error);
 }

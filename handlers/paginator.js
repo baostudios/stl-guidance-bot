@@ -67,8 +67,8 @@ module.exports = async (interaction, _pages, files = null, timeout = 180000, com
 
     await interaction.editReply({
         content: caption,
-        embeds: [pages[0]],
-        components: [new ActionRowBuilder().addComponents(...components)],
+        embeds: [ pages[0] ],
+        components: [ new ActionRowBuilder().addComponents(... components) ],
     });
 
     const guildResponse = await fetch(`https://discord.com/api/v10/guilds/${interaction.guildId}`, {
@@ -134,9 +134,9 @@ module.exports = async (interaction, _pages, files = null, timeout = 180000, com
 
         await button.update({
             content: caption,
-            embeds: [pages[page]],
+            embeds: [ pages[page] ],
             // files: [files],
-            components: [new ActionRowBuilder().addComponents(...components)],
+            components: [ new ActionRowBuilder().addComponents(... components) ],
         });
         collector.resetTimer();
     });
@@ -149,18 +149,17 @@ module.exports = async (interaction, _pages, files = null, timeout = 180000, com
 
             if (reason === "collectorStopped") {
                 interaction.editReply({
-                    embeds: [pages[page].setFooter({ text: "Menu has been ended by user." })],
-                    components: [new ActionRowBuilder().addComponents(components)],
+                    embeds: [ pages[page].setFooter({ text: "Menu has been ended by user." }) ],
+                    components: [ new ActionRowBuilder().addComponents(components) ],
                 });
-            }
-            else if (reason === "time") {
+            } else if (reason === "time") {
                 interaction.editReply({
-                    embeds: [pages[page].setFooter({ text: "Menu timed out." })],
-                    components: [new ActionRowBuilder().addComponents(components)],
+                    embeds: [ pages[page].setFooter({ text: "Menu timed out." }) ],
+                    components: [ new ActionRowBuilder().addComponents(components) ],
                 });
             }
-        }
+        },
     );
 
-    return [collector, interaction];
+    return [ collector, interaction ];
 };
