@@ -12,4 +12,4 @@ RUN npm install
 COPY . /usr/src/bot
 
 # Start me!
-CMD ["npm", "build"]
+CMD ["npm", "run build"]
