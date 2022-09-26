@@ -17,8 +17,8 @@ for (const file of commandFiles) {
     commands.push(command.data.toJSON());
 }
 
-const { TOKEN, ID, SERVER } = process.env;
-const rest = new REST({ version: '10' }).setToken(TOKEN);
+const { BOT_TOKEN, ID, SERVER } = process.env;
+const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
 
 
 if (SERVER) {
