@@ -15,16 +15,6 @@ module.exports = {
             option.setName('user')
                 .setDescription('Will instead show the profile of the specified user')
                 .setRequired(false)),
-    // name: "profile",
-    // description: "Check out your shiny profile! Includes timetable information, lunch information, and others!",
-    // options: [
-    //     {
-    //         name: "user",
-    //         description: "Will instead show the profile of the specified user.",
-    //         required: false,
-    //         type: ApplicationCommandOptionType.User
-    //     }
-    // ],
     /**
      *
      * @param interaction
