@@ -26,4 +26,5 @@ for (const file of eventFiles) {
 }
 
 // noinspection JSIgnoredPromiseFromCall
+console.log(process.env.token)
 client.login(process.env.TOKEN);
